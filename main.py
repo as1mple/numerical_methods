@@ -4,12 +4,25 @@ from methods import Calculation
 
 
 def input_arg(text, func=complex) -> complex:
-    tmp = input(text)
-    try:
-        tmp = func(tmp)
-        return tmp
-    except Exception:
-        return 0
+    while True:
+        tmp = input(text)
+        try:
+            tmp = func(tmp)
+            return tmp
+        except Exception:
+            print("ERROR!!! Try again...")
+
+
+def input_func():
+    while True:
+        try:
+            func = input("input Function = ")
+            function = lambda x: eval(func)
+            function(0)
+            if not func.find("x") == -1: return function
+            print("ERROR!!!it's not function.Try again...")
+        except Exception as e:
+            print(e)
 
 
 def main() -> None:
@@ -19,16 +32,7 @@ def main() -> None:
           "\n* Secant method,"
           "\n* Chord method")
     while True:
-        while True:
-            try:
-                func = input("input Function = ")
-                function = lambda x: eval(func)
-                function(0)
-                # function = lambda x: eval("x ** 5 - 7 * x ** 4 + 3 * x ** 2 - 5 * x + 1")
-                break
-            except Exception as e:
-                print(e)
-
+        function = input_func()
         testing = Calculation(function=function)
         cod_method = {"newtons": 0, "secant": 1, "chord": 2}
         flag = True
