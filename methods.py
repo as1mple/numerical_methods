@@ -50,7 +50,7 @@ class Calculation:
         print('Found solution after', count, 'iterations.')
         return x1
 
-    def chord(self, x0, x1, epsilon) -> complex:
+    def chord(self, x0, x1, epsilon) -> complex or None:
         f_x0 = self.function(x0)
         f_x1 = self.function(x1)
         iteration_counter = 0
@@ -60,7 +60,7 @@ class Calculation:
                 x = x1 - f_x1 / denominator
             except ZeroDivisionError:
                 print("Error! - denominator zero for x = ", x)
-                exit(1)  # Abort with error
+                return None  # Abort with error
             x0 = x1
             x1 = x
             f_x0 = f_x1
