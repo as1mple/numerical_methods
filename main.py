@@ -5,7 +5,7 @@ from methods import Calculation
 
 def input_arg(text, func=complex) -> complex:
     while True:
-        tmp = input(text)
+        tmp = input(text).replace("i", "j")
         try:
             tmp = func(tmp)
             return tmp
@@ -16,6 +16,7 @@ def input_arg(text, func=complex) -> complex:
 def input_func():
     while True:
         try:
+            print("------------------------------------------------------------------------------------------------")
             func = input("input Function = ")
             function = lambda x: eval(func)
             function(0)
@@ -34,21 +35,19 @@ def main() -> None:
     while True:
         function = input_func()
         testing = Calculation(function=function)
-        cod_method = {"newtons": 0, "secant": 1, "chord": 2}
+        cod_method = {"NEWTON'S": 0, "SECANT": 1, "CHORD": 2}
         flag = True
         while flag:
             flag_ = True
             while flag_:
-                method = cod_method.get(input("Input method : ").lower(), -1)
+                method = cod_method.get(input("Input method : ").upper(), -1)
                 flag_ = False if method != -1 else True
                 if flag_: print("ERROR!!! Try again...")
-            print("Vau")
             if method == 0:
                 x0 = input_arg("x0 = ")
                 epsilon = input_arg("epsilon = ", float)
                 x = Symbol('x')
                 dif_str = str(function(x).diff('x'))
-                print(f"derivative function ")
                 dif_function = lambda x: eval(dif_str)
 
                 result = testing.newton(Df=dif_function, x0=x0, epsilon=epsilon)
@@ -62,7 +61,8 @@ def main() -> None:
                 else:
                     result = testing.chord(x0=with_, x1=to_, epsilon=epsilon)
 
-            print(f"A solution is: {result}")
+            print(f"A solution is: {str(result).replace('(','').replace(')','').replace('j','i')}")
+            print("------------------------------------------------------------------------------------------------")
             flag = False if input("Change method ? y/n ").lower() != "y" else True
         if input("Change Function? y/n ").lower() == "n": exit("BYE"); break
 

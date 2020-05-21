@@ -1,5 +1,5 @@
 class Calculation:
-    """Approximate solution of f(x)=0 by Newton's, secant, chord methods.
+    """Approximate solution of f(x)=0 by Newton's, secant and chord methods.
 
        Parameters
        ----------
@@ -17,7 +17,7 @@ class Calculation:
     def __init__(self, function):
         self.function = function
 
-    def newton(self, Df, x0, epsilon) -> complex or None:
+    def newton(self, Df, x0: complex or float or int, epsilon: float or int) -> complex or None:
         xn = x0
         flag = True
         count = 0
@@ -29,20 +29,19 @@ class Calculation:
                 return xn
             Dfxn = Df(xn)
             if Dfxn == 0:
-                print('Zero derivative. No solution found.')
+                print('Zero derivative.')
                 return None
             xn = xn - fxn / Dfxn
-        print('Exceeded maximum iterations. No solution found.')
-        return None
 
-    def secant(self, x0, x1, epsilon) -> complex or None:
+    def secant(self, x0: complex or float or int, x1: complex or float or int,
+               epsilon: float or int) -> complex or None:
         count = 0
         while abs(x1 - x0) > epsilon:
             tmp = x1
             try:
                 x1 = x1 - (x1 - x0) * self.function(x1) / (self.function(x1) - self.function(x0))
-            except Exception:
-                print('Zero derivative. No solution found.')
+            except ZeroDivisionError as e:
+                print(e)
                 return None
             x0 = tmp
             count += 1
@@ -50,25 +49,29 @@ class Calculation:
         print('Found solution after', count, 'iterations.')
         return x1
 
-    def chord(self, x0, x1, epsilon) -> complex or None:
-        f_x0 = self.function(x0)
-        f_x1 = self.function(x1)
-        iteration_counter = 0
-        while abs(f_x1) > epsilon:
+    def chord(self, x0: float or int, x1: float or int, epsilon: float or int) -> complex or None:
+        iteration = 0
+        while True:
             try:
-                denominator = (f_x1 - f_x0) / (x1 - x0)
-                x = x1 - f_x1 / denominator
-            except ZeroDivisionError:
-                print("Error! - denominator zero for x = ", x)
-                return None  # Abort with error
-            x0 = x1
-            x1 = x
-            f_x0 = f_x1
-            f_x1 = self.function(x1)
-            iteration_counter += 1
-        # Here, either a solution is found, or too many iterations
-        if abs(f_x1) > epsilon:
-            print("Solution not found!")
-        else:
-            print("Number of function calls: ", iteration_counter)
-        return x
+                xn = x0 - self.function(x0) * (x1 - x0) / (self.function(x1) - self.function(x0))
+            except ZeroDivisionError as e:
+                print(e)
+                return None
+
+            fxn = self.function(xn)
+            iteration += 1
+            if abs(fxn) <= epsilon:
+                print(f'Found solution after {iteration} iterations.')
+                return xn
+            elif self.function(x0).real * fxn.real < 0:
+                x0 = x0
+                x1 = xn
+            elif self.function(x1).real * fxn.real < 0:
+                x0 = xn
+                x1 = x1
+            elif fxn == 0:
+                print(f"Found exact solution after {iteration} iterations")
+                return xn
+            else:
+                print("Chord method fails.")
+                return None
