@@ -12,7 +12,7 @@ def hello():
 def input_func():
     while True:
         try:
-            print("--------------------------------------------------------------------------------------------")
+            print("-" * 92)
             func = input("input Function = ")
             function = lambda x: eval(func)
             function(101.101)
@@ -49,7 +49,7 @@ def print_result(method, res):
         print(
             f"A solution is: {str(res[0]).replace('(', '').replace(')', '').replace('+0j', '').replace('j', 'i')} -> "
             f"after {res[1]} iterations.")
-    print("--------------------------------------------------------------------------------------------")
+    print("-" * 92)
 
 
 def main() -> None:
