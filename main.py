@@ -1,6 +1,25 @@
-from sympy import Symbol
-
 from methods import Calculation
+
+
+def hello():
+    print("Hello!!!")
+    print("Approximate solution of f(x)=0 by "
+          "\n* Newton's method,"
+          "\n* Secant method,"
+          "\n* Chord method")
+
+
+def input_func():
+    while True:
+        try:
+            print("--------------------------------------------------------------------------------------------")
+            func = input("input Function = ")
+            function = lambda x: eval(func)
+            function(101.101)
+            if not func.find("x") == -1: return function
+            print("ERROR!!!it's not function.Try again...")
+        except Exception as e:
+            print(e)
 
 
 def input_arg(text, func=complex) -> complex:
@@ -13,59 +32,49 @@ def input_arg(text, func=complex) -> complex:
             print("ERROR!!! Try again...")
 
 
-def input_func():
+def input_method(cod_method: dict) -> str:
     while True:
-        try:
-            print("------------------------------------------------------------------------------------------------")
-            func = input("input Function = ")
-            function = lambda x: eval(func)
-            function(0)
-            if not func.find("x") == -1: return function
-            print("ERROR!!!it's not function.Try again...")
-        except Exception as e:
-            print(e)
+        method = cod_method.get(input("Input method : ").upper(), -1)
+        if method != -1: return method
+        print("ERROR!!! Try again...")
+
+
+def print_result(method, res):
+    if method == 3:
+        for name, result in res.items():
+            print(
+                f"{name} Method -> A solution is: {str(result[0]).replace('(', '').replace(')', '').replace('+0j', '').replace('j', 'i')} -> "
+                f"after {result[1]} iterations.")
+    else:
+        print(
+            f"A solution is: {str(res[0]).replace('(', '').replace(')', '').replace('+0j', '').replace('j', 'i')} -> "
+            f"after {res[1]} iterations.")
+    print("--------------------------------------------------------------------------------------------")
 
 
 def main() -> None:
-    print("Hello!!!")
-    print("Approximate solution of f(x)=0 by "
-          "\n* Newton's method,"
-          "\n* Secant method,"
-          "\n* Chord method")
+    cod_method = {"NEWTON'S": 0, "SECANT": 1, "CHORD": 2, "ALL": 3}
     while True:
         function = input_func()
-        testing = Calculation(function=function)
-        cod_method = {"NEWTON'S": 0, "SECANT": 1, "CHORD": 2}
-        flag = True
-        while flag:
-            flag_ = True
-            while flag_:
-                method = cod_method.get(input("Input method : ").upper(), -1)
-                flag_ = False if method != -1 else True
-                if flag_: print("ERROR!!! Try again...")
+        Numerical_method = Calculation(function=function)
+        while True:
+            method = input_method(cod_method)
+            x0 = input_arg("x0 = ")
+            x1 = input_arg("x1 = ")
+            epsilon = input_arg("epsilon = ", float)
             if method == 0:
-                x0 = input_arg("x0 = ")
-                epsilon = input_arg("epsilon = ", float)
-                x = Symbol('x')
-                dif_str = str(function(x).diff('x'))
-                dif_function = lambda x: eval(dif_str)
-
-                result = testing.newton(Df=dif_function, x0=x0, epsilon=epsilon)
-
-            elif method == 1 or method == 2:
-                with_ = input_arg("interval with = ")
-                to_ = input_arg("intervat to = ")
-                epsilon = input_arg("epsilon = ", float)
-                if method == 1:
-                    result = testing.secant(x0=with_, x1=to_, epsilon=epsilon)
-                else:
-                    result = testing.chord(x0=with_, x1=to_, epsilon=epsilon)
-
-            print(
-                f"A solution is: {str(result).replace('(', '').replace(')', '').replace('+0j', '').replace('j', 'i')}")
-            print("------------------------------------------------------------------------------------------------")
-            flag = False if input("Change method ? y/n ").lower() != "y" else True
-        if input("Change Function? y/n ").lower() == "n": exit("BYE"); break
+                result = Numerical_method.newton(x0=(x0 + x1) / 2, epsilon=epsilon)
+            elif method == 1:
+                result = Numerical_method.secant(x0=x0, x1=x1, epsilon=epsilon)
+            elif method == 2:
+                result = Numerical_method.chord(x0=x0, x1=x1, epsilon=epsilon)
+            elif method == 3:
+                result = {"Newton's": Numerical_method.newton(x0=x0, epsilon=epsilon),
+                          "Secant": Numerical_method.secant(x0=x0, x1=x1, epsilon=epsilon),
+                          "Chord": Numerical_method.chord(x0=x0, x1=x1, epsilon=epsilon)}
+            print_result(method=method, res=result)
+            if input("Change method ? y/n ").lower() == "n": break
+        if input("Change Function? y/n ").lower() == "n": exit("BYE")
 
 
 if __name__ == '__main__':
