@@ -61,7 +61,8 @@ def main() -> None:
                 else:
                     result = testing.chord(x0=with_, x1=to_, epsilon=epsilon)
 
-            print(f"A solution is: {str(result).replace('(','').replace(')','').replace('j','i')}")
+            print(
+                f"A solution is: {str(result).replace('(', '').replace(')', '').replace('+0j', '').replace('j', 'i')}")
             print("------------------------------------------------------------------------------------------------")
             flag = False if input("Change method ? y/n ").lower() != "y" else True
         if input("Change Function? y/n ").lower() == "n": exit("BYE"); break
