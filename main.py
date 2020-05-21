@@ -1,7 +1,7 @@
 from methods import Calculation
 
 
-def hello():
+def hello() -> None:
     print("Hello!!!")
     print("Approximate solution of f(x)=0 by "
           "\n* Newton's method,"
@@ -39,7 +39,7 @@ def input_method(cod_method: dict) -> str:
         print("ERROR!!! Try again...")
 
 
-def print_result(method, res):
+def print_result(method, res) -> None:
     if method == 3:
         for name, result in res.items():
             print(
@@ -53,6 +53,7 @@ def print_result(method, res):
 
 
 def main() -> None:
+    hello()
     cod_method = {"NEWTON'S": 0, "SECANT": 1, "CHORD": 2, "ALL": 3}
     while True:
         function = input_func()
