@@ -20,23 +20,22 @@ class Calculation:
     def __init__(self, function):
         self.function = function
 
-    def newton(self, x0: complex or float or int, epsilon: float or int) -> complex or None:
+    def newton(self, x0: complex or float or int, x1, epsilon: float or int) -> complex or None:
         x = Symbol('x')
         dif_str = str(self.function(x).diff('x'))
         Df = lambda x: eval(dif_str)
-        xn = x0
-        flag = True
+        xn = x1
         iterations = 0
-        while flag:
+        while abs(xn - x0) > epsilon:
             fxn = self.function(xn)
+            x0 = xn
             iterations += 1
-            if abs(fxn) < epsilon:
-                return xn, iterations
             Dfxn = Df(xn)
             if Dfxn == 0:
                 print('Zero derivative.')
                 return None, iterations
             xn = xn - fxn / Dfxn
+        return xn, iterations
 
     def secant(self, x0: complex or float or int, x1: complex or float or int,
                epsilon: float or int) -> complex or None:

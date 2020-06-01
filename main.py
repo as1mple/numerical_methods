@@ -1,4 +1,5 @@
 from methods import Calculation
+import math
 
 
 def hello() -> None:
@@ -64,13 +65,13 @@ def main() -> None:
             x1 = input_arg("x1 = ")
             epsilon = input_arg("epsilon = ", float)
             if method == 0:
-                result = Numerical_method.newton(x0=(x0 + x1) / 2, epsilon=epsilon)
+                result = Numerical_method.newton(x0=(x0 + x1) / 2, x1=x1, epsilon=epsilon)
             elif method == 1:
                 result = Numerical_method.secant(x0=x0, x1=x1, epsilon=epsilon)
             elif method == 2:
                 result = Numerical_method.chord(x0=x0, x1=x1, epsilon=epsilon)
             elif method == 3:
-                result = {"Newton's": Numerical_method.newton(x0=x0, epsilon=epsilon),
+                result = {"Newton's": Numerical_method.newton(x0=x0, x1=x1, epsilon=epsilon),
                           "Secant": Numerical_method.secant(x0=x0, x1=x1, epsilon=epsilon),
                           "Chord": Numerical_method.chord(x0=x0, x1=x1, epsilon=epsilon)}
             print_result(method=method, res=result)
